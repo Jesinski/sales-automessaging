@@ -21,8 +21,8 @@ function authenticate(email: string) {
 }
 
 export default async function getCalendarEvents(email: string) {
+  console.log(email);
   const client = authenticate(email);
-
   const calendar = google.calendar({ version: "v3", auth: client });
 
   const now = new Date();
@@ -30,8 +30,7 @@ export default async function getCalendarEvents(email: string) {
   const timeMax = addHours(timeMin, 1);
 
   const params: calendar_v3.Params$Resource$Events$List = {
-    calendarId: "gustavo.j@dotconceito.com",
-    // calendarId: "tiago@dotconceito.com",
+    calendarId: email,
     q: "+ DOT",
     timeMin: timeMin.toISOString(),
     timeMax: timeMax.toISOString(),
@@ -39,14 +38,15 @@ export default async function getCalendarEvents(email: string) {
     singleEvents: true,
     orderBy: "startTime",
   };
-  const events = (await calendar.events.list(params)).data.items;
 
+  const events = (await calendar.events.list(params)).data.items;
+  // console.log(events);
   if (!events || events.length === 0) {
     console.log("No today events found.");
     return;
   }
 
   console.log("Found", events.length, "events");
-  console.log(events);
+  // console.log(events);
   return events;
 }

@@ -13,7 +13,8 @@ const gustavo = {
     "https://webhook.zapcloud.com.br/webhook/1e330cfdf8c6e92136c398d6f13351ff",
 };
 const lorenzo = {
-  email: "lorenzo@dotconceito.com",
+  // email: "lorenzo@dotconceito.com",
+  email: "plataforma@dotconceito.com",
   name: "Lorenzo Meneguzzo",
   phone: "+5551980109909",
   pabblyWebhook:

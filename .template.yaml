@@ -1,0 +1,29 @@
+# Rename this file, then add the Enviroment properties accordangly
+
+AWSTemplateFormatVersion: "2010-09-09"
+Transform: "AWS::Serverless-2016-10-31"
+Description: An AWS Serverless Specification template describing your function.
+Resources:
+  sdrautomessaging:
+    Type: "AWS::Serverless::Function"
+    Properties:
+      CodeUri: .
+      Handler: index.handler
+      Runtime: nodejs18.x
+      Description: "Main Lambda"
+      MemorySize: 128
+      Timeout: 60
+      Role: "arn:aws:iam::214799812914:role/lambda-role-for-aws-cli"
+      RuntimeManagementConfig:
+        UpdateRuntimeOn: Auto
+      Environment:
+        Variables:
+          # Add needed variables
+    Metadata:
+      BuildMethod: esbuild
+      BuildProperties:
+        Minify: true
+        Target: "es2020"
+        Sourcemap: true
+        EntryPoints:
+          - index.ts

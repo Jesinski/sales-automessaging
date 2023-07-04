@@ -1,5 +1,6 @@
 import { Context, ScheduledEvent } from "aws-lambda";
 import dotenv from "dotenv";
+import getCalendarEvents from "./getCalendarEvents";
 import getSalesRepresentatives from "./getSalesRepresentatives";
 dotenv.config();
 
@@ -10,12 +11,15 @@ export const handler = async (event: ScheduledEvent, context: Context) => {
     // getSDRInfo()
     const salesRepresentatives = getSalesRepresentatives();
 
-    salesRepresentatives.forEach((representative) => {
-      // getCalendarEvents()
-      // processEvents()
-      // getCustomerInfo()
-      // sendWhatsappMessage()
-    });
+    for (let i = 0; i < salesRepresentatives.length; i++) {
+      await getCalendarEvents(salesRepresentatives[i].email);
+    }
+    // salesRepresentatives.forEach(async (representative, index) => {
+    //   // getCalendarEvents()
+    //   // processEvents()
+    //   // getCustomerInfo()
+    //   // sendWhatsappMessage()
+    // });
   } catch (err) {
     console.log(err);
   } finally {
