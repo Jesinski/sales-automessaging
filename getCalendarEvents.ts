@@ -9,7 +9,7 @@ const SCOPES = [
 ];
 const GRAPHITE_COLOR_ID = "8";
 const GCP_CLIENT_EMAIL = process.env.GCP_CLIENT_EMAIL;
-const GCP_PRIVATE_KEY = process.env.GCP_PRIVATE_KEY;
+const GCP_PRIVATE_KEY = process.env.GCP_PRIVATE_KEY!.replace(/\\n/g, "\n");
 
 function authenticate(email: string) {
   return new JWT({

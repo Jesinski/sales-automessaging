@@ -31,13 +31,13 @@ async function getContact(id: string): Promise<CustomerInfo | undefined> {
 
 export default async function getCustomer(
   email: string
-): Promise<CustomerInfo> {
+): Promise<CustomerInfo | undefined> {
   try {
     const contactId = await getContactId(email);
     const contact = await getContact(contactId);
     return contact!;
   } catch (err) {
     console.log(JSON.stringify(err));
-    return undefined!;
+    return undefined;
   }
 }

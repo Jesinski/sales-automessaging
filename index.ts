@@ -52,13 +52,12 @@ export const handler = async (event: ScheduledEvent, context: Context) => {
               !attendee.self && !attendee.email!.includes("@dotconceito.com")
           )!.email!,
         };
-        console.log("payload", JSON.stringify(payload));
 
         // getCustomerInfo()
         const customer = await getCustomer(payload.customerEmail);
-        console.log("customer:", customer);
 
-        await sendWhatsappMessage(payload, customer);
+        await sendWhatsappMessage(payload, customer!);
+        console.log("Sent Whatsapp", j + 1);
       }
     }
     //   // sendWhatsappMessage()

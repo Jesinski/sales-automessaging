@@ -1,2 +1,2 @@
-aws lambda update-function-code --function-name sdr-automessaging --zip-file "fileb://dist/index.zip"
 aws lambda create-function --function-name hello-world --runtime "nodejs16.x" --role arn:aws:iam::123456789012:role/lambda-ex --zip-file "fileb://dist/index.zip" --handler index.handler
+aws lambda update-function-code --function-name sdr-automessaging --zip-file "fileb://dist/index.zip"

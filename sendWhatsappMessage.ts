@@ -4,15 +4,12 @@ export default async function sendWhatsappMessage(
   payload: MeetingRequester,
   customer: CustomerInfo
 ) {
-  console.log("sendingWhatsapp");
   let data = JSON.stringify({
     name: customer.name,
     phone: customer.phone,
     variable1: customer.name,
     variable2: payload.meetingTime,
   });
-
-  console.log(data);
 
   let config = {
     method: "post",
@@ -24,11 +21,9 @@ export default async function sendWhatsappMessage(
   };
 
   try {
-    const response = await fetch(payload.creatorInfo.pabblyWebhook, config)
+    await fetch(payload.creatorInfo.pabblyWebhook, config)
       .then((res) => res)
       .catch((err) => console.log(err));
-
-    console.log("res", response);
   } catch (error) {
     console.log(error);
   }
