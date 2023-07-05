@@ -1,4 +1,4 @@
-# Rename this file, then add the Enviroment properties accordangly
+# Rename this file to template.yaml, then add the Environment properties accordingly
 
 AWSTemplateFormatVersion: "2010-09-09"
 Transform: "AWS::Serverless-2016-10-31"
@@ -18,6 +18,7 @@ Resources:
         UpdateRuntimeOn: Auto
       Environment:
         Variables:
+          NODE_OPTIONS: --enable-source-maps --max_old_space_size=8192
           # Add needed variables
     Metadata:
       BuildMethod: esbuild
