@@ -7,7 +7,7 @@ const SCOPES = [
   "https://www.googleapis.com/auth/calendar.readonly",
   "https://www.googleapis.com/auth/calendar.events.readonly",
 ];
-
+const GRAPHITE_COLOR_ID = "8";
 const GCP_CLIENT_EMAIL = process.env.GCP_CLIENT_EMAIL;
 const GCP_PRIVATE_KEY = process.env.GCP_PRIVATE_KEY;
 
@@ -21,7 +21,6 @@ function authenticate(email: string) {
 }
 
 export default async function getCalendarEvents(email: string) {
-  console.log(email);
   const client = authenticate(email);
   const calendar = google.calendar({ version: "v3", auth: client });
 
@@ -39,14 +38,11 @@ export default async function getCalendarEvents(email: string) {
     orderBy: "startTime",
   };
 
-  const events = (await calendar.events.list(params)).data.items;
-  // console.log(events);
-  if (!events || events.length === 0) {
-    console.log("No today events found.");
-    return;
-  }
+  const events =
+    (await calendar.events.list(params)).data.items?.filter(
+      (event) => event.colorId === GRAPHITE_COLOR_ID
+    ) || [];
 
-  console.log("Found", events.length, "events");
-  // console.log(events);
+  console.log("Found", events.length, "events for", email);
   return events;
 }
