@@ -1,3 +1,4 @@
+import { calendar_v3 } from "googleapis";
 import { CustomerInfo } from ".";
 
 async function getContactId(email: string) {
@@ -30,14 +31,14 @@ async function getContact(id: string): Promise<CustomerInfo | undefined> {
 }
 
 export default async function getCustomer(
-  email: string
+  attendees: calendar_v3.Schema$EventAttendee[]
 ): Promise<CustomerInfo | undefined> {
-  try {
-    const contactId = await getContactId(email);
+  for (let i = 0; i < attendees.length; i++) {
+    const contactId = await getContactId(attendees[i].email!);
     const contact = await getContact(contactId);
-    return contact!;
-  } catch (err) {
-    console.log(JSON.stringify(err));
-    return undefined;
+    if (contact) {
+      return contact;
+    }
   }
+  return undefined;
 }

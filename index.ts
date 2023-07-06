@@ -16,7 +16,7 @@ export type MeetingRequester = {
   meetingTime: string;
   creatorEmail: string;
   creatorInfo: SalesRepresentative;
-  customerEmail: string;
+  customers: calendar_v3.Schema$EventAttendee[];
 };
 
 export type CustomerInfo = {
@@ -47,20 +47,20 @@ export const handler = async (event: ScheduledEvent, context: Context) => {
           meetingTime: getMeetingTime(events[j]),
           creatorInfo: salesRepresentatives[i],
           creatorEmail: events[j].creator?.email!,
-          customerEmail: events[j].attendees!.find(
+          customers: events[j].attendees!.filter(
             (attendee) =>
               !attendee.self && !attendee.email!.includes("@dotconceito.com")
-          )!.email!,
+          ),
         };
 
         // getCustomerInfo()
-        const customer = await getCustomer(payload.customerEmail);
+        const customer = await getCustomer(payload.customers);
 
+        // sendWhatsappMessage()
         await sendWhatsappMessage(payload, customer!);
         console.log("Sent Whatsapp", j + 1);
       }
     }
-    //   // sendWhatsappMessage()
   } catch (err) {
     console.log(err);
   } finally {
