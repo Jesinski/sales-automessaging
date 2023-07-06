@@ -40,7 +40,8 @@ export default async function getCalendarEvents(email: string) {
 
   const events =
     (await calendar.events.list(params)).data.items?.filter(
-      (event) => event.colorId === GRAPHITE_COLOR_ID
+      (event) =>
+        event.colorId === GRAPHITE_COLOR_ID && event.creator?.self === true
     ) || [];
 
   console.log("Found", events.length, "events for", email);
