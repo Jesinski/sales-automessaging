@@ -15,14 +15,11 @@ export const handler = async (event: ScheduledEvent, context: Context) => {
   try {
     const promises: Promise<void>[] = []; // TODO: run this shit in parallel
 
-    // getSDRInfo()
     const salesRepresentatives = getSalesRepresentatives();
 
     for (let i = 0; i < salesRepresentatives.length; i++) {
-      // getCalendarEvents()
       const events = await getCalendarEvents(salesRepresentatives[i].email);
 
-      // processEvents()
       for (let j = 0; j < events.length; j++) {
         const payload: MeetingRequester = {
           eventId: events[j].id!,
@@ -36,20 +33,15 @@ export const handler = async (event: ScheduledEvent, context: Context) => {
           ),
         };
 
-        // getCustomerInfo()
         const customer = await getCustomerInformation(payload.customers);
 
         if (!customer) {
-          console.log("Customer Not Found! Payload:", payload);
+          logError("Customer Not Found! Payload:", payload);
           continue;
         }
-        // sendWhatsappMessage()
+
         await sendWhatsappMessage(payload, customer);
-        console.log(
-          "Sent Whatsapp",
-          payload.summary,
-          payload.creatorInfo.email
-        );
+        logError("Sent Whatsapp", payload);
       }
     }
     return {
@@ -62,3 +54,7 @@ export const handler = async (event: ScheduledEvent, context: Context) => {
     };
   }
 };
+
+function logError(error: string, payload: MeetingRequester) {
+  console.log(error, payload.summary, payload.creatorInfo.email);
+}
