@@ -1,5 +1,5 @@
 import { calendar_v3 } from "googleapis";
-import { CustomerInfo } from ".";
+import { CustomerInfo } from "./types";
 
 async function getContactId(email: string) {
   const url = `https://crm.rdstation.com/api/v1/contacts?token=${process.env.RD_CRM_TOKEN}&email=${email}`;
