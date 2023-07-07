@@ -1,4 +1,4 @@
-import { CustomerInfo, MeetingRequester } from ".";
+import { CustomerInfo, MeetingRequester } from "./types";
 
 export default async function sendWhatsappMessage(
   payload: MeetingRequester,
