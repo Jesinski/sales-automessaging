@@ -1,13 +1,11 @@
 import { Context, ScheduledEvent } from "aws-lambda";
 import { format, parseISO } from "date-fns";
-// import dotenv from "dotenv";
 import { calendar_v3 } from "googleapis";
 import getCalendarEvents from "./getCalendarEvents";
 import getCustomer from "./getCustomer";
 import getSalesRepresentatives from "./getSalesRepresentatives";
 import sendWhatsappMessage from "./sendWhatsappMessage";
 import { MeetingRequester } from "./types";
-// dotenv.config();
 
 function getMeetingTime(event: calendar_v3.Schema$Event) {
   return format(parseISO(event!.start!.dateTime!), "HH:mm");
