@@ -2,7 +2,7 @@ import { Context, ScheduledEvent } from "aws-lambda";
 import { format, parseISO } from "date-fns";
 import { calendar_v3 } from "googleapis";
 import getCalendarEvents from "./getCalendarEvents";
-import getCustomer from "./getCustomer";
+import getCustomerInformation from "./getCustomerInformation";
 import getSalesRepresentatives from "./getSalesRepresentatives";
 import sendWhatsappMessage from "./sendWhatsappMessage";
 import { MeetingRequester } from "./types";
@@ -37,18 +37,28 @@ export const handler = async (event: ScheduledEvent, context: Context) => {
         };
 
         // getCustomerInfo()
-        const customer = await getCustomer(payload.customers);
+        const customer = await getCustomerInformation(payload.customers);
 
+        if (!customer) {
+          console.log("Customer Not Found! Payload:", payload);
+          continue;
+        }
         // sendWhatsappMessage()
-        await sendWhatsappMessage(payload, customer!);
-        console.log("Sent Whatsapp", j + 1);
+        await sendWhatsappMessage(payload, customer);
+        console.log(
+          "Sent Whatsapp",
+          payload.summary,
+          payload.creatorInfo.email
+        );
       }
     }
-  } catch (err) {
-    console.log(err);
-  } finally {
     return {
       statusCode: 200,
+    };
+  } catch (err) {
+    console.log(err);
+    return {
+      statusCode: 500,
     };
   }
 };

@@ -1,8 +1,8 @@
-import { CustomerInfo, MeetingRequester } from "./types";
+import { CustomerInformation, MeetingRequester } from "./types";
 
 export default async function sendWhatsappMessage(
   payload: MeetingRequester,
-  customer: CustomerInfo
+  customer: CustomerInformation
 ) {
   let data = JSON.stringify({
     name: customer.name,

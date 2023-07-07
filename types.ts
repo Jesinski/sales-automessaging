@@ -16,7 +16,22 @@ export type MeetingRequester = {
   customers: calendar_v3.Schema$EventAttendee[];
 };
 
-export type CustomerInfo = {
+export type CustomerInformation = {
   name: string;
   phone: string;
+};
+
+export type ListContacts = {
+  contacts: Contact[];
+};
+
+type Contact = {
+  id: string;
+  name: string;
+  phones: ContactPhones[];
+};
+
+type ContactPhones = {
+  phone: string;
+  type: string;
 };
