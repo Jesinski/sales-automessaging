@@ -1,44 +1,54 @@
 import { calendar_v3 } from "googleapis";
 import { CustomerInfo } from "./types";
 
-async function getContactId(email: string) {
-  const url = `https://crm.rdstation.com/api/v1/contacts?token=${process.env.RD_CRM_TOKEN}&email=${email}`;
-  const options = { method: "GET", headers: { accept: "application/json" } };
+type ListContacts = {
+  contacts: Contact[];
+};
 
-  return fetch(url, options)
-    .then((res) => res.json())
-    .then((json) => json.contacts[0].id)
-    .catch((err) => console.error("error:" + err));
-}
+type ContactPhones = {
+  phone: string;
+  type: string;
+};
 
-async function getContact(id: string): Promise<CustomerInfo | undefined> {
-  const url = `https://crm.rdstation.com/api/v1/contacts/${id}?token=${process.env.RD_CRM_TOKEN}`;
-  const options = { method: "GET", headers: { accept: "application/json" } };
+type Contact = {
+  id: string;
+  name: string;
+  phones: ContactPhones[];
+};
 
-  return fetch(url, options)
-    .then((res) => res.json())
-    .then((json) => {
-      const contact = {
-        name: json.name,
-        phone: json.phones.find((phone: any) => phone.type === "fax").phone,
-      };
-      return contact;
-    })
-    .catch((err) => {
-      console.error("error:" + err);
-      return undefined;
-    });
-}
+const RD_API_KEY = process.env.RD_CRM_TOKEN;
+const REQUEST_OPTIONS = {
+  method: "GET",
+  headers: { accept: "application/json" },
+};
 
 export default async function getCustomer(
   attendees: calendar_v3.Schema$EventAttendee[]
 ): Promise<CustomerInfo | undefined> {
   for (let i = 0; i < attendees.length; i++) {
-    const contactId = await getContactId(attendees[i].email!);
-    const contact = await getContact(contactId);
+    const contact = await getFirstContactWithFaxPhone(attendees[i].email!);
     if (contact) {
-      return contact;
+      return {
+        name: contact.name,
+        phone: contact.phones.find((phone) => phone.type === "fax")!.phone,
+      };
     }
   }
   return undefined;
+}
+
+async function getFirstContactWithFaxPhone(email: string) {
+  const url = `https://crm.rdstation.com/api/v1/contacts?token=${RD_API_KEY}&email=${email}`;
+
+  const response = await callRDApi<ListContacts>(url);
+  return response.contacts.find(
+    (contact) =>
+      contact.phones.find((phone) => phone.type === "fax") !== undefined
+  );
+}
+
+async function callRDApi<T>(url: string): Promise<T> {
+  return await fetch(url, REQUEST_OPTIONS)
+    .then((res) => res.json())
+    .catch((err) => console.error("error:" + err));
 }

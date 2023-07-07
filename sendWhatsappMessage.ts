@@ -20,11 +20,7 @@ export default async function sendWhatsappMessage(
     body: data,
   };
 
-  try {
-    await fetch(payload.creatorInfo.pabblyWebhook, config)
-      .then((res) => res)
-      .catch((err) => console.log(err));
-  } catch (error) {
-    console.log(error);
-  }
+  await fetch(payload.creatorInfo.pabblyWebhook, config)
+    .then((res) => res)
+    .catch((err) => console.log(err));
 }
