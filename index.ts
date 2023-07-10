@@ -1,5 +1,6 @@
 import { Context, ScheduledEvent } from "aws-lambda";
 import { format, parseISO } from "date-fns";
+import { utcToZonedTime } from "date-fns-tz";
 import { calendar_v3 } from "googleapis";
 import getCalendarEvents from "./getCalendarEvents";
 import getCustomerInformation from "./getCustomerInformation";
@@ -8,7 +9,9 @@ import sendWhatsappMessage from "./sendWhatsappMessage";
 import { MeetingRequester } from "./types";
 
 function getMeetingTime(event: calendar_v3.Schema$Event) {
-  return format(parseISO(event!.start!.dateTime!), "HH:mm");
+  const utcDate = parseISO(event!.start!.dateTime!);
+  const zonedDate = utcToZonedTime(utcDate, "-03:00");
+  return format(zonedDate, "HH:mm");
 }
 
 export const handler = async (event: ScheduledEvent, context: Context) => {

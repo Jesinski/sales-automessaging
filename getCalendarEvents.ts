@@ -52,5 +52,6 @@ function getEventsListParams(
     maxResults: 10,
     singleEvents: true,
     orderBy: "startTime",
+    timeZone: "UTC",
   };
 }
