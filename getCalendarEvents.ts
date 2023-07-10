@@ -1,8 +1,8 @@
-import { addDays, addHours } from "date-fns";
+import { addDays, addHours, startOfHour } from "date-fns";
 import { JWT } from "google-auth-library";
 import { calendar_v3, google } from "googleapis";
 
-const GRAPHITE_COLOR_ID = "8";
+const KEYWORD = "dotconceito2023";
 const GCP_CLIENT_EMAIL = process.env.GCP_CLIENT_EMAIL;
 const GCP_PRIVATE_KEY = process.env.GCP_PRIVATE_KEY!.replace(/\\n/g, "\n");
 const SCOPES = [
@@ -21,7 +21,7 @@ export default async function getCalendarEvents(
   const events =
     (await calendar.events.list(params)).data.items?.filter(
       (event) =>
-        event.colorId === GRAPHITE_COLOR_ID && event.creator?.self === true
+        event.description?.includes(KEYWORD) && event.creator?.self === true
     ) || [];
 
   console.log("Found", events.length, "events for", email);
@@ -40,13 +40,12 @@ function getJwtClient(email: string): JWT {
 function getEventsListParams(
   email: string
 ): calendar_v3.Params$Resource$Events$List {
-  const now = new Date();
+  const now = startOfHour(new Date());
   const timeMin = addDays(now, 1);
   const timeMax = addHours(timeMin, 1);
-
   return {
     calendarId: email,
-    q: "+ DOT",
+    q: "dotconceito2023",
     timeMin: timeMin.toISOString(),
     timeMax: timeMax.toISOString(),
     maxResults: 10,
