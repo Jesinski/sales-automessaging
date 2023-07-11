@@ -21,7 +21,7 @@ export default async function getCalendarEvents(
   const events =
     (await calendar.events.list(params)).data.items?.filter(
       (event) =>
-        event.description?.includes(KEYWORD) && event.creator?.self === true
+        event.description?.includes(KEYWORD) && event.organizer?.self === true
     ) || [];
 
   console.log("Found", events.length, "events for", email);
